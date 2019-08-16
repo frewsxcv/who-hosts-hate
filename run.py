@@ -21,6 +21,15 @@ sites = [
     'prageru.com',
     'stormfront.org',
     'gab.com',
+    'nationalpolicy.institute',
+    'washsummit.com',
+    'jihadwatch.org',
+    'natall.com',
+    'bloodandhonourworldwide.co.uk',
+    'conservative-headlines.org',
+    'leagueofthesouth.com',
+    'nsm88.org',
+    'patriotfront.us',
 ]
 
 isps = collections.defaultdict(lambda: [])
