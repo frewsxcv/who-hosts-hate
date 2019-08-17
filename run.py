@@ -20,10 +20,11 @@ def site_rank(site: str) -> typing.Optional[int]:
     tree = ElementTree.fromstring(str(urlinfo))
     rank = tree.findall(
         './/aws:TrafficData/aws:Rank',
-        {'aws':"http://awis.amazonaws.com/doc/2005-07-11"}
+        {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
     )[0].text
     # TODO fetch `aws:ContributingSubdomain`
     return int(rank) if rank else None
+
 
 sites = [
     '4chan.org',
@@ -72,7 +73,8 @@ isps = collections.defaultdict(lambda: [])
 
 for site in sites:
     response = urllib.request.urlopen(
-        "http://api.ipstack.com/{}?access_key={}".format(site, args.ipstack_access_key),
+        "http://api.ipstack.com/{}?access_key={}".format(
+            site, args.ipstack_access_key),
     ).read()
 
     response_json = json.loads(response)
