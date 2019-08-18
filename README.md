@@ -1,8 +1,12 @@
-# Requirements
+# who-hosts-hate
+
+Which companies host hate sites?
+
+## Requirements
 
 - Python 3.7
 
-# Setup
+## Setup
 
 ```sh
 python3 -m venv .venv
@@ -10,18 +14,10 @@ source .venv/bin/activate # or `source .venv/bin/activate.fish`
 pip install -r requirements.txt
 ```
 
-# Run
+## Run
+
+Generate `index.html` via `build.py`.
 
 ```
-$ python run.py <IPSTACK ACCESS KEY>
-{   'Akamai Technologies, Inc.': ['foxnews.com'],
-    'Cloudflare, Inc.': [   'dailywire.com',
-                            'infowars.com',
-                            '4chan.org',
-                            'godhatesfags.com',
-                            'kiwifarms.net',
-                            'stormfront.org',
-                            'gab.com'],
-    'Google LLC': ['breitbart.com', 'officialproudboys.com', 'prageru.com'],
-    'N.T. Technology, Inc.': ['8ch.net']}
+usage: build.py [-h] ipstack_access_key aws_access_key_id aws_secret_access_key
 ```
