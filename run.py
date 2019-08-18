@@ -6,6 +6,7 @@ import argparse
 import myawis
 import typing
 from xml.etree import ElementTree
+from jinja2 import Template
 
 
 def site_rank(site: str) -> typing.Optional[int]:
@@ -45,11 +46,19 @@ def isps():
     return dict(isps)
 
 
+def render(isps_dict):
+    with open('index.html.j2') as f:
+        template = Template(f.read())
+        print(template.render(name='John Doe'))
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')
 parser.add_argument('aws_access_key_id')
 parser.add_argument('aws_secret_access_key')
 args = parser.parse_args()
 
+isps_dict = isps()
 pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(isps())
+pp.pprint(isps_dict)
+render(isps_dict)
