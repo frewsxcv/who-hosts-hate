@@ -8,11 +8,13 @@ import argparse
 import myawis
 import typing
 import datetime
+import logging
 from xml.etree import ElementTree
 from jinja2 import Template
 
 
 def site_rank(site: str) -> typing.Optional[int]:
+    logging.info('Fetching site rank for {}'.format(site))
     obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
     urlinfo = obj.urlinfo(site)
     tree = ElementTree.fromstring(str(urlinfo))
@@ -25,6 +27,7 @@ def site_rank(site: str) -> typing.Optional[int]:
 
 
 def site_isp(site: str) -> str:
+    logging.info('Fetching site ISP for {}'.format(site))
     response = urllib.request.urlopen(
         "http://api.ipstack.com/{}?access_key={}".format(
             site, args.ipstack_access_key),
@@ -80,5 +83,7 @@ parser.add_argument('ipstack_access_key')
 parser.add_argument('aws_access_key_id')
 parser.add_argument('aws_secret_access_key')
 args = parser.parse_args()
+
+logging.basicConfig(level=logging.INFO)
 
 render()
