@@ -41,17 +41,27 @@ def build_isps_data():
 
         rank = site_rank(site)
 
-        isps[isp].append([site, rank])
+        isps[isp].append([site, rank, rank_to_color(rank)])
 
     print(isps)
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 
 
-def render(isps_dict):
+def rank_to_color(rank: typing.Optional[int]) -> str:
+    if rank and rank < 10000:
+        return 'yellow'
+    elif rank and rank < 100000:
+        return 'white'
+    else:
+        return 'grey'
+
+
+def render(isps_data):
     with open('index.html.j2') as f:
         template = Template(f.read())
-        print(template.render(name='John Doe'))
 
+    with open('index.html', 'w') as f:
+        f.write(template.render(isps_data=isps_data))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')
