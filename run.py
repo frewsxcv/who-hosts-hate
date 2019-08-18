@@ -26,52 +26,13 @@ def site_rank(site: str) -> typing.Optional[int]:
     return int(rank) if rank else None
 
 
-sites = [
-    '4chan.org',
-    '8ch.net',
-    'acpeds.org',
-    'actforamerica.org',
-    'adflegal.org',
-    'americanfreedomalliance.org',
-    'americanidentitymovement.com',
-    'americannaziparty.com',
-    'barenakedislam.com',
-    'bloodandhonourworldwide.co.uk',
-    'breitbart.com',
-    'cfns.us',
-    'conservative-headlines.org',
-    'culturewars.com',
-    'dailywire.com',
-    'faithandheritage.com',
-    'foxnews.com',
-    'gab.com',
-    'gellerreport.com',
-    'godhatesfags.com',
-    'infowars.com',
-    'irvingbooks.com',
-    'jihadwatch.org',
-    'jtf.org',
-    'kiwifarms.net',
-    'leagueofthesouth.com',
-    'natall.com',
-    'nationalpolicy.institute',
-    'nsm88.org',
-    'officialproudboys.com',
-    'patriotfront.us',
-    'politicalislam.com',
-    'prageru.com',
-    'profam.org',
-    'stormfront.org',
-    'tightroperecords.com',
-    'understandingthethreat.com',
-    'unitedfamilies.org',
-    'vachristian.org',
-    'washsummit.com',
-]
+def sites() -> [str]:
+    with open('domains.txt') as f:
+        return f.read().strip().splitlines()
 
 isps = collections.defaultdict(lambda: [])
 
-for site in sites:
+for site in sites():
     response = urllib.request.urlopen(
         "http://api.ipstack.com/{}?access_key={}".format(
             site, args.ipstack_access_key),
