@@ -65,6 +65,7 @@ def render(isps_data):
     with open('index.html', 'w') as f:
         f.write(template.render(isps_data=isps_data))
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')
 parser.add_argument('aws_access_key_id')
