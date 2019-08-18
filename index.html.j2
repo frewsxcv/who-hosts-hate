@@ -21,6 +21,15 @@
         padding: 0;
       }
 
+      .intro {
+        color: #777;
+        margin: 0;
+      }
+
+      .intro a {
+        color: #777;
+      }
+
       .content {
         width: 100%;
         max-width: 24rem;
@@ -34,6 +43,8 @@
   <body>
     <div class=content>
       <h1>Who hosts hate?</h1>
+      <p class=intro>Last updated: {{ todays_date }}</p>
+      <p class=intro><a href="https://github.com/frewsxcv/who-hosts-hate/">Source code</a></p>
       <ol>
         {% for isp_name, sites in isps_data %}
         <li>

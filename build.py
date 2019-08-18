@@ -7,6 +7,7 @@ import urllib.request
 import argparse
 import myawis
 import typing
+import datetime
 from xml.etree import ElementTree
 from jinja2 import Template
 
@@ -58,12 +59,19 @@ def rank_to_color(rank: typing.Optional[int]) -> str:
         return 'grey'
 
 
+def todays_date() -> str:
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
 def render(isps_data):
     with open('index.html.j2') as f:
         template = Template(f.read())
 
     with open('index.html', 'w') as f:
-        f.write(template.render(isps_data=isps_data))
+        f.write(template.render(
+            isps_data=isps_data,
+            todays_date=todays_date()
+        ))
 
 
 parser = argparse.ArgumentParser()
