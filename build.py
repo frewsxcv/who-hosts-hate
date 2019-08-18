@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 
-import collections
-import json
-import pprint
-import urllib.request
 import argparse
-import myawis
-import typing
+import collections
 import datetime
+import json
 import logging
+import pprint
+import typing
+import urllib.request
+
 from xml.etree import ElementTree
-from jinja2 import Template
+
+import jinja2
+import myawis
 
 
 def site_rank(site: str) -> typing.Optional[int]:
@@ -69,7 +71,7 @@ def todays_date() -> str:
 
 def render():
     with open('index.html.j2') as f:
-        template = Template(f.read())
+        template = jinja2.Template(f.read())
 
     with open('index.html', 'w') as f:
         f.write(template.render(
