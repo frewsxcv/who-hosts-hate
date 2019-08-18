@@ -4,7 +4,7 @@
     <title>Who hosts hate?</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet">
     <link href="https://who-hosts-hate.com" rel="canonical">
     <link href="favicon.png" rel="icon">
     <style>
@@ -21,6 +21,22 @@
         padding: 0;
       }
 
+      ul {
+        padding: 0;
+        font-size: 0.8rem;
+      }
+
+      ul > li {
+        display: inline;
+        padding: 0.2rem;
+        margin-right: 0.3rem;
+        white-space: nowrap;
+      }
+
+      .monospace {
+        font-family: 'Roboto Mono', monospace;
+      }
+
       .intro {
         color: #777;
         margin: 0;
@@ -32,7 +48,7 @@
 
       .content {
         width: 100%;
-        max-width: 24rem;
+        max-width: 30rem;
         margin: 0 auto;
         padding: 3rem 0;
         display: flex;
@@ -43,15 +59,15 @@
   <body>
     <div class=content>
       <h1>Who hosts hate?</h1>
-      <p class=intro>Last updated: {{ todays_date }}</p>
-      <p class=intro><a href="https://github.com/frewsxcv/who-hosts-hate/">Source code</a></p>
+      <p class="intro monospace">Last updated: {{ todays_date }}</p>
+      <p class="intro monospace"><a href="https://github.com/frewsxcv/who-hosts-hate/">Source code</a></p>
       <ol>
         {% for isp_name, sites in isps_data %}
         <li>
           <h2>{{ isp_name }}</h2>
           <ul>
             {% for site in sites %}
-            <li style="color: {{ site[2] }}">{{ site[0] }}</li>
+            <li class="monospace" style="color: {{ site[2] }}">{{ site[0] }}</li>
             {% endfor %}
           </ul>
         </li>
