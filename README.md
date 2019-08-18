@@ -1,6 +1,6 @@
 # [who-hosts-hate](https://who-hosts-hate.com)
 
-Who hosts hate sites on the internet?
+Who hosts hate on the internet?
 
 ## Requirements
 
