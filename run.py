@@ -26,7 +26,7 @@ def sites() -> [str]:
         return f.read().strip().splitlines()
 
 
-def isps():
+def build_isps_data():
     isps = collections.defaultdict(lambda: [])
 
     for site in sites():
@@ -43,7 +43,8 @@ def isps():
 
         isps[isp].append([site, rank])
 
-    return dict(isps)
+    print(isps)
+    return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 
 
 def render(isps_dict):
@@ -58,7 +59,7 @@ parser.add_argument('aws_access_key_id')
 parser.add_argument('aws_secret_access_key')
 args = parser.parse_args()
 
-isps_dict = isps()
+isps_data = build_isps_data()
 pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(isps_dict)
-render(isps_dict)
+pp.pprint(isps_data)
+render(isps_data)
