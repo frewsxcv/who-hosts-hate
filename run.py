@@ -7,12 +7,6 @@ import myawis
 import typing
 from xml.etree import ElementTree
 
-parser = argparse.ArgumentParser()
-parser.add_argument('ipstack_access_key')
-parser.add_argument('aws_access_key_id')
-parser.add_argument('aws_secret_access_key')
-args = parser.parse_args()
-
 
 def site_rank(site: str) -> typing.Optional[int]:
     obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
@@ -30,21 +24,32 @@ def sites() -> [str]:
     with open('domains.txt') as f:
         return f.read().strip().splitlines()
 
-isps = collections.defaultdict(lambda: [])
 
-for site in sites():
-    response = urllib.request.urlopen(
-        "http://api.ipstack.com/{}?access_key={}".format(
-            site, args.ipstack_access_key),
-    ).read()
+def isps():
+    isps = collections.defaultdict(lambda: [])
 
-    response_json = json.loads(response)
+    for site in sites():
+        response = urllib.request.urlopen(
+            "http://api.ipstack.com/{}?access_key={}".format(
+                site, args.ipstack_access_key),
+        ).read()
 
-    isp = response_json['connection']['isp']
+        response_json = json.loads(response)
 
-    rank = site_rank(site)
+        isp = response_json['connection']['isp']
 
-    isps[isp].append([site, rank])
+        rank = site_rank(site)
+
+        isps[isp].append([site, rank])
+
+    return dict(isps)
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('ipstack_access_key')
+parser.add_argument('aws_access_key_id')
+parser.add_argument('aws_secret_access_key')
+args = parser.parse_args()
 
 pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(dict(isps))
+pp.pprint(isps())
