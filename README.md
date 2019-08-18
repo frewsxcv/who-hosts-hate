@@ -1,10 +1,15 @@
 # [who-hosts-hate](https://who-hosts-hate.com)
 
-Which companies host hate sites?
+Who hosts hate sites on the internet?
 
 ## Requirements
 
 - Python 3.7
+- AWS account
+  - Used for querying a site’s popularity ranking
+- ipstack account
+  - Used for querying a site’s host
+  - ‘Basic’ tier or higher
 
 ## Setup
 
