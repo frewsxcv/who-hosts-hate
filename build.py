@@ -24,6 +24,17 @@ def site_rank(site: str) -> typing.Optional[int]:
     return int(rank) if rank else None
 
 
+def site_isp(site: str) -> str:
+    response = urllib.request.urlopen(
+        "http://api.ipstack.com/{}?access_key={}".format(
+            site, args.ipstack_access_key),
+    ).read()
+
+    response_json = json.loads(response)
+
+    return response_json['connection']['isp']
+
+
 def sites() -> [str]:
     with open('domains.txt') as f:
         return f.read().strip().splitlines()
@@ -33,20 +44,10 @@ def build_isps_data():
     isps = collections.defaultdict(lambda: [])
 
     for site in sites():
-        response = urllib.request.urlopen(
-            "http://api.ipstack.com/{}?access_key={}".format(
-                site, args.ipstack_access_key),
-        ).read()
-
-        response_json = json.loads(response)
-
-        isp = response_json['connection']['isp']
-
+        isp = site_isp(site)
         rank = site_rank(site)
-
         isps[isp].append([site, rank, rank_to_color(rank)])
 
-    print(isps)
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 
 
@@ -63,13 +64,13 @@ def todays_date() -> str:
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
-def render(isps_data):
+def render():
     with open('index.html.j2') as f:
         template = Template(f.read())
 
     with open('index.html', 'w') as f:
         f.write(template.render(
-            isps_data=isps_data,
+            isps_data=build_isps_data(),
             todays_date=todays_date()
         ))
 
@@ -80,7 +81,4 @@ parser.add_argument('aws_access_key_id')
 parser.add_argument('aws_secret_access_key')
 args = parser.parse_args()
 
-isps_data = build_isps_data()
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(isps_data)
-render(isps_data)
+render()
