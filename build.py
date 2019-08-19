@@ -60,11 +60,11 @@ def rank_to_color(rank: typing.Optional[int]) -> str:
     if rank and rank < 10000:
         return '#fff600'
     elif rank and rank < 100000:
-        return '#e7e139'
+        return '#d7d45d'
     elif rank and rank < 1000000:
-        return '#cbc97b'
+        return '#c9c77f'
     elif rank and rank < 10000000:
-        return '#bfbe98'
+        return '#bcbc9d'
     else:
         return '#b3b3b3'
 
