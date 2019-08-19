@@ -62,7 +62,7 @@ def rank_to_color(rank: typing.Optional[int]) -> str:
     elif rank and rank < 100000:
         return 'white'
     else:
-        return 'grey'
+        return '#999999'
 
 
 def todays_date() -> str:
