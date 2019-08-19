@@ -58,11 +58,15 @@ def build_isps_data():
 
 def rank_to_color(rank: typing.Optional[int]) -> str:
     if rank and rank < 10000:
-        return 'yellow'
+        return '#fff600'
     elif rank and rank < 100000:
-        return 'white'
+        return '#e7e139'
+    elif rank and rank < 1000000:
+        return '#cbc97b'
+    elif rank and rank < 10000000:
+        return '#bfbe98'
     else:
-        return '#999999'
+        return '#b3b3b3'
 
 
 def todays_date() -> str:
