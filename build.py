@@ -66,7 +66,7 @@ def rank_to_color(rank: typing.Optional[int]) -> str:
 
 
 def todays_date() -> str:
-    return datetime.datetime.now().strftime("%Y-%m-%d")
+    return datetime.datetime.now().strftime("%B %d, %Y")
 
 
 def render():
@@ -79,13 +79,14 @@ def render():
     with open('index.html', 'w') as f:
         f.write(template.render(
             isps_data=build_isps_data(),
-            todays_date=todays_date()
         ))
 
     template = env.get_template('faqs.html.j2')
 
     with open('faqs.html', 'w') as f:
-        f.write(template.render())
+        f.write(template.render(
+            todays_date=todays_date(),
+        ))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')
