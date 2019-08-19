@@ -1,6 +1,16 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
+<div style="text-align: center">
+  <h1>Who hosts<a href="faqs.html#host"><sup>*</sup></a> hate<br>on the internet?</h1>
+
+  <p class="intro monospace">updated on {{ todays_date }}</p>
+
+  <p class="intro monospace"><a href="https://github.com/frewsxcv/who-hosts-hate/">source</a> – <a href="faqs.html">faqs</a></p>
+</div>
+
+<hr style="margin-top: 2rem;">
+
 <ol>
   {% for isp_name, sites in isps_data %}
   <li>

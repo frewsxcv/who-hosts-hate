@@ -85,9 +85,7 @@ def render():
     template = env.get_template('faqs.html.j2')
 
     with open('faqs.html', 'w') as f:
-        f.write(template.render(
-            todays_date=todays_date()
-        ))
+        f.write(template.render())
 
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')

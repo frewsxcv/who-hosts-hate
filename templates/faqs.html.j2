@@ -1,15 +1,11 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-<h2>FAQs</h2>
+<a href="index.html">Back</a>
 
-<a href="#">Back</a>
+<h1>FAQs</h1>
 
-<h3 id=host>What do you mean by host?</h2>
+<h2 id=host>What do you mean by ‘host’?</h2>
 
-<p>Hey</p>
-
-<h3>Where is the host data coming from?</h2>
-
-<p>Host data comes from <a href='https://ipstack.com/'>ipstack</a>.</p>
+<p>To determine which company is hosting a particular site, we do an <a href="https://en.wikipedia.org/wiki/Autonomous_system_(Internet)">ASN</a> lookup on the site’s IP address, and arrive at the name of the site’s ISP. For many sites, the name of the ISP is the site’s <a href="https://en.wikipedia.org/wiki/Content_delivery_network">CDN</a>. In this case, there’s no trivial, programmatic way to determine the site’s underlying host behind the CDN. Despite this, the CDN is still serving assets for hateful sites, in addition to providing additional security and DDoS protections.</p>
 {% endblock %}
