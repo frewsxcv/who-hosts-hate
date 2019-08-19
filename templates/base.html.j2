@@ -51,18 +51,7 @@
       <h1>Who hosts hate on the internet?</h1>
       <p class="intro monospace">Last updated: {{ todays_date }}</p>
       <p class="intro monospace"><a href="https://github.com/frewsxcv/who-hosts-hate/">Source code</a></p>
-      <ol>
-        {% for isp_name, sites in isps_data %}
-        <li>
-          <h2>{{ isp_name }}</h2>
-          <ul>
-            {% for site in sites %}
-            <li class="monospace" style="color: {{ site[2] }}">{{ site[0] }}</li>
-            {% endfor %}
-          </ul>
-        </li>
-        {% endfor %}
-      </ol>
+      {% block content %}{% endblock %}
     </div>
   </body>
 </html>

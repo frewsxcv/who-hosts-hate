@@ -70,8 +70,11 @@ def todays_date() -> str:
 
 
 def render():
-    with open('index.html.j2') as f:
-        template = jinja2.Template(f.read())
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader('templates'),
+    )
+
+    template = env.get_template('index.html.j2')
 
     with open('index.html', 'w') as f:
         f.write(template.render(
@@ -79,6 +82,10 @@ def render():
             todays_date=todays_date()
         ))
 
+    template = env.get_template('faqs.html.j2')
+
+    with open('faqs.html', 'w') as f:
+        f.write(template.render())
 
 parser = argparse.ArgumentParser()
 parser.add_argument('ipstack_access_key')

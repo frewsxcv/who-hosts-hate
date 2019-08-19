@@ -1,0 +1,16 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<ol>
+  {% for isp_name, sites in isps_data %}
+  <li>
+    <h2>{{ isp_name }}</h2>
+    <ul>
+      {% for site in sites %}
+      <li class="monospace" style="color: {{ site[2] }}">{{ site[0] }}</li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ol>
+{% endblock %}
