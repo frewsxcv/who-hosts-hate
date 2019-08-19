@@ -17,10 +17,20 @@
       ol {
         list-style-type: none;
         padding: 0;
+        margin: 0;
       }
 
       ul > li {
         white-space: nowrap;
+      }
+
+      hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 0;
       }
 
       .monospace {
@@ -49,8 +59,13 @@
   <body>
     <div class=content>
       <h1>Who hosts hate on the internet?</h1>
+
       <p class="intro monospace">Last updated: {{ todays_date }}</p>
+
       <p class="intro monospace"><a href="https://github.com/frewsxcv/who-hosts-hate/">Source code</a></p>
+
+      <hr style="margin-top: 2rem;">
+
       {% block content %}{% endblock %}
     </div>
   </body>
