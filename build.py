@@ -2,6 +2,7 @@
 
 import argparse
 import collections
+import csv
 import datetime
 import json
 import logging
@@ -40,18 +41,22 @@ def site_isp(site: str) -> str:
     return response_json['connection']['isp']
 
 
-def sites() -> [str]:
-    with open('domains.txt') as f:
-        return f.read().strip().splitlines()
+def sites() -> [[str, str]]:
+    with open('domains.csv') as f:
+        return list(csv.reader(f))
 
 
 def build_isps_data():
     isps = collections.defaultdict(lambda: [])
 
-    for site in sites():
+    for site, hate_reason in sites():
         isp = site_isp(site)
         rank = site_rank(site)
-        isps[isp].append([site, rank, rank_to_color(rank)])
+
+        if hate_reason != 'splc':
+            hate_reason = None
+
+        isps[isp].append([site, rank, rank_to_color(rank), hate_reason])
 
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 
