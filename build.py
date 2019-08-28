@@ -16,11 +16,21 @@ import jinja2
 import myawis
 
 
+ISP_NAME_MAP = {
+    "New Dream Network, LLC": "New Dream Network, LLC (DreamHost)",
+    "Softlayer Technologies Inc.": "Softlayer Technologies Inc. (IBM)",
+}
+
+
 def site_rank(site: str) -> typing.Optional[int]:
     logging.info('Fetching site rank for {}'.format(site))
     obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
     urlinfo = obj.urlinfo(site)
-    tree = ElementTree.fromstring(str(urlinfo))
+    try:
+        tree = ElementTree.fromstring(str(urlinfo))
+    except xml.etree.ElementTree.ParseError:
+        logging.error("Could not retrieve rank for {}".format(site))
+        return None
     rank = tree.findall(
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
@@ -38,7 +48,9 @@ def site_isp(site: str) -> str:
 
     response_json = json.loads(response)
 
-    return response_json['connection']['isp']
+    isp_name = response_json['connection']['isp']
+
+    return ISP_NAME_MAP.get(isp_name, isp_name)
 
 
 def sites() -> [[str, str]]:
