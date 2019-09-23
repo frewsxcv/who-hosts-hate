@@ -28,7 +28,7 @@ def site_rank(site: str) -> typing.Optional[int]:
     urlinfo = obj.urlinfo(site)
     try:
         tree = ElementTree.fromstring(str(urlinfo))
-    except xml.etree.ElementTree.ParseError:
+    except ElementTree.ParseError:
         logging.error("Could not retrieve rank for {}".format(site))
         return None
     rank = tree.findall(
