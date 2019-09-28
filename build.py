@@ -8,6 +8,7 @@ import json
 import logging
 import pprint
 import typing
+import requests
 import urllib.request
 
 from xml.etree import ElementTree
@@ -24,8 +25,14 @@ ISP_NAME_MAP = {
 
 def site_rank(site: str) -> typing.Optional[int]:
     logging.info('Fetching site rank for {}'.format(site))
-    obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
-    urlinfo = obj.urlinfo(site)
+    while True:
+        obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
+        try:
+            urlinfo = obj.urlinfo(site)
+            break
+        except requests.exceptions.ConnectionError:
+            logging.error("AWIS connection error, trying again".format(site))
+            pass
     try:
         tree = ElementTree.fromstring(str(urlinfo))
     except ElementTree.ParseError:
