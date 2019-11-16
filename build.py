@@ -8,7 +8,9 @@ import json
 import logging
 import pprint
 import typing
+import socket
 import requests
+import geoip2.database
 import urllib.request
 
 from xml.etree import ElementTree
@@ -31,8 +33,7 @@ def site_rank(site: str) -> typing.Optional[int]:
             urlinfo = obj.urlinfo(site)
             break
         except requests.exceptions.ConnectionError:
-            logging.error("AWIS connection error, trying again".format(site))
-            pass
+            logging.error("AWIS connection error, trying again")
     try:
         tree = ElementTree.fromstring(str(urlinfo))
     except ElementTree.ParseError:
@@ -48,16 +49,17 @@ def site_rank(site: str) -> typing.Optional[int]:
 
 def site_isp(site: str) -> str:
     logging.info('Fetching site ISP for {}'.format(site))
-    response = urllib.request.urlopen(
-        "http://api.ipstack.com/{}?access_key={}".format(
-            site, args.ipstack_access_key),
-    ).read()
-
-    response_json = json.loads(response)
-
-    isp_name = response_json['connection']['isp']
-
-    return ISP_NAME_MAP.get(isp_name, isp_name)
+    try:
+        ip = socket.gethostbyname(site)
+    except socket.gaierror:
+        logging.error("Could not DNS resolve {}".format(site))
+        return '<unknown>'
+    with geoip2.database.Reader('GeoLite2-ASN.mmdb') as reader:
+        response = reader.asn(ip)
+        return ISP_NAME_MAP.get(
+            response.autonomous_system_organization,
+            response.autonomous_system_organization,
+        )
 
 
 def sites() -> [[str, str]]:
@@ -117,7 +119,6 @@ def render():
         ))
 
 parser = argparse.ArgumentParser()
-parser.add_argument('ipstack_access_key')
 parser.add_argument('aws_access_key_id')
 parser.add_argument('aws_secret_access_key')
 args = parser.parse_args()

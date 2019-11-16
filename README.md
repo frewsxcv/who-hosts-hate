@@ -7,9 +7,6 @@ Who hosts hate on the internet?
 - Python 3.7
 - AWS account
   - Used for querying a site’s popularity ranking
-- ipstack account
-  - Used for querying a site’s host
-  - ‘Basic’ tier or higher
 
 ## Setup
 
@@ -24,7 +21,7 @@ pip install -r requirements.txt
 Generate `index.html` via `build.py`.
 
 ```
-usage: build.py [-h] ipstack_access_key aws_access_key_id aws_secret_access_key
+usage: build.py [-h] aws_access_key_id aws_secret_access_key
 ```
 
 ## Legal
