@@ -1,0 +1,11 @@
+name: Build site
+
+on: push
+
+jobs:
+  build_site:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
