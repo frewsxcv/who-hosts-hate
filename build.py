@@ -20,6 +20,8 @@ import jinja2
 import myawis
 
 
+HATE_SITES_CSV_DEFAULT_PATH = 'hate-sites.csv'
+
 OUTPUT_DIR = 'build'
 
 ISP_NAME_MAP = {
@@ -78,7 +80,7 @@ def site_isp(site: str) -> str:
 
 
 def sites() -> [[str, str]]:
-    with open('domains.csv') as f:
+    with open(args.hate_sites_csv_path) as f:
         return list(csv.reader(f))
 
 
@@ -146,6 +148,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('aws_access_key_id')
     parser.add_argument('aws_secret_access_key')
+    parser.add_argument('--hate-sites-csv-path', default=HATE_SITES_CSV_DEFAULT_PATH)
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
