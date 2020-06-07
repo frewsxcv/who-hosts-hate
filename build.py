@@ -92,9 +92,15 @@ def build_isps_data():
         if hate_reason != 'splc':
             hate_reason = None
 
-        isps[isp].append([site, rank, rank_to_color(rank), hate_reason])
+        isps[isp].append([mask_site(site), rank, rank_to_color(rank), hate_reason])
 
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
+
+
+def mask_site(site: str) -> str:
+    domain = site.split(".")[-1]
+    num_asterisks = len(site) - len(domain) - 2
+    return "{}{}.{}".format(site[0], "*" * num_asterisks, domain)
 
 
 def rank_to_color(rank: typing.Optional[int]) -> str:
