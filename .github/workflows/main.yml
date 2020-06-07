@@ -4,8 +4,13 @@ on: push
 
 jobs:
   build_site:
+    name: Build site
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
       uses: actions/setup-python@v2
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+    - name: Generate site
+      run: python build.py
