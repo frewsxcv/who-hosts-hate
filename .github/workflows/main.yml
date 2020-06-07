@@ -13,4 +13,4 @@ jobs:
     - name: Install Python dependencies
       run: pip install -r requirements.txt
     - name: Generate site
-      run: python build.py
+      run: python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
