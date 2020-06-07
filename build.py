@@ -20,6 +20,8 @@ import jinja2
 import myawis
 
 
+OUTPUT_DIR = 'build'
+
 ISP_NAME_MAP = {
     "New Dream Network, LLC": "New Dream Network, LLC (DreamHost)",
     "Softlayer Technologies Inc.": "Softlayer Technologies Inc. (IBM)",
@@ -118,17 +120,17 @@ def render():
 
     template = env.get_template('index.html.j2')
 
-    if not os.path.exists('build'):
-        os.mkdir('build')
+    if not os.path.exists(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
 
-    with open('build/index.html', 'w') as f:
+    with open(os.path.join(OUTPUT_DIR, 'index.html'), 'w') as f:
         f.write(template.render(
             isps_data=build_isps_data(),
         ))
 
     template = env.get_template('faqs.html.j2')
 
-    with open('build/faqs.html', 'w') as f:
+    with open(os.path.join(OUTPUT_DIR, 'faqs.html'), 'w') as f:
         f.write(template.render(
             todays_date=todays_date(),
         ))
