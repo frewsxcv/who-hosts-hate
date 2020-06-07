@@ -39,6 +39,13 @@ def site_rank(site: str) -> typing.Optional[int]:
     except ElementTree.ParseError:
         logging.error("Could not retrieve rank for {}".format(site))
         return None
+    results = tree.findall(
+        './/aws:TrafficData/aws:Rank',
+        {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
+    )
+    if not results:
+        logging.error('Could not find rank')
+        return None
     rank = tree.findall(
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
@@ -55,7 +62,11 @@ def site_isp(site: str) -> str:
         logging.error("Could not DNS resolve {}".format(site))
         return '<unknown>'
     with geoip2.database.Reader('GeoLite2-ASN.mmdb') as reader:
-        response = reader.asn(ip)
+        try:
+            response = reader.asn(ip)
+        except geoip2.errors.AddressNotFoundError:
+            logging.error("Could not find address in GeoLite2 DB")
+            return '<unknown>'
         return ISP_NAME_MAP.get(
             response.autonomous_system_organization,
             response.autonomous_system_organization,
