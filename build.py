@@ -6,6 +6,7 @@ import csv
 import datetime
 import json
 import logging
+import os
 import pprint
 import typing
 import socket
@@ -117,14 +118,17 @@ def render():
 
     template = env.get_template('index.html.j2')
 
-    with open('index.html', 'w') as f:
+    if not os.path.exists('build'):
+        os.mkdir('build')
+
+    with open('build/index.html', 'w') as f:
         f.write(template.render(
             isps_data=build_isps_data(),
         ))
 
     template = env.get_template('faqs.html.j2')
 
-    with open('faqs.html', 'w') as f:
+    with open('build/faqs.html', 'w') as f:
         f.write(template.render(
             todays_date=todays_date(),
         ))
