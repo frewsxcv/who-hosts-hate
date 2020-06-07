@@ -15,10 +15,12 @@ jobs:
         persist-credentials: false
     - name: Setup Python
       uses: actions/setup-python@v2
-    - name: Install Python dependencies
-      run: pip install -r requirements.txt
+    - name: Install pipenv
+      run: pip install pipenv
+    - name: Installing project dependencies
+      run: pipenv install
     - name: Generate site
-      run: python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: pipenv run python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
