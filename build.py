@@ -142,11 +142,12 @@ def render():
             todays_date=todays_date(),
         ))
 
-parser = argparse.ArgumentParser()
-parser.add_argument('aws_access_key_id')
-parser.add_argument('aws_secret_access_key')
-args = parser.parse_args()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('aws_access_key_id')
+    parser.add_argument('aws_secret_access_key')
+    args = parser.parse_args()
 
-logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
 
-render()
+    render()
