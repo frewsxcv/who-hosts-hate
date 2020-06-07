@@ -81,7 +81,9 @@ def site_isp(site: str) -> str:
 
 def sites() -> [[str, str]]:
     with open(args.hate_sites_csv_path) as f:
-        return list(csv.reader(f))
+        reader = csv.reader(f)
+        next(reader) # Skip the heading row
+        return list(reader)
 
 
 def build_isps_data():
