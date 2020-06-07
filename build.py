@@ -29,7 +29,6 @@ ISP_NAME_MAP = {
 
 
 def site_rank(site: str) -> typing.Optional[int]:
-    logging.info('Fetching site rank for {}'.format(site))
     while True:
         obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
         try:
@@ -53,12 +52,12 @@ def site_rank(site: str) -> typing.Optional[int]:
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
     )[0].text
+    logging.info('{} – Found site rank: {}'.format(site, rank))
     # TODO fetch `aws:ContributingSubdomain`
     return int(rank) if rank else None
 
 
 def site_isp(site: str) -> str:
-    logging.info('Fetching site ISP for {}'.format(site))
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
@@ -68,12 +67,14 @@ def site_isp(site: str) -> str:
         try:
             response = reader.asn(ip)
         except geoip2.errors.AddressNotFoundError:
-            logging.error("Could not find address in GeoLite2 DB")
+            logging.error('{} – Could not find address in GeoLite2 DB'.format(site))
             return '<unknown>'
-        return ISP_NAME_MAP.get(
-            response.autonomous_system_organization,
-            response.autonomous_system_organization,
-        )
+    isp = ISP_NAME_MAP.get(
+        response.autonomous_system_organization,
+        response.autonomous_system_organization,
+    )
+    logging.info('{} – Found ISP: {}'.format(site, isp))
+    return isp
 
 
 def sites() -> [[str, str]]:
