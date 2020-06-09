@@ -123,7 +123,7 @@ def build_isps_data():
         if hate_reason != 'splc':
             hate_reason = None
 
-        isps[isp].append([mask_site(site), rank, rank_to_color(rank), hate_reason])
+        isps[isp].append([mask_site(site), rank_to_color(rank), hate_reason])
 
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 

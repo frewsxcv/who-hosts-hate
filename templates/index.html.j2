@@ -16,10 +16,10 @@
     <h3><a href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></h3>
     <ul>
       {% for site in sites %}
-      <li class="monospace" style="color: {{ site[2] }}" data-alexa-rank="{{ site[1] }}">
+      <li class="monospace" style="color: {{ site[1] }}">
         {{ site[0] }}
-        {% if site[3] %}
-          <a href="faqs.html#classify" class="dark-grey">[{{ site[3] }}]</a>
+        {% if site[2] %}
+          <a href="faqs.html#classify" class="dark-grey">[{{ site[2] }}]</a>
         {% endif %}
       </li>
       {% endfor %}
