@@ -6,32 +6,44 @@ on:
       - master
 
 jobs:
-  build_site:
-    name: Build site
+  fetch_hate_sites_csv:
+    name: Fetch hate-sites.csv
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    - uses: actions/checkout@v2
-      with:
-        repository: frewsxcv/hate-sites
-        token: ${{ secrets.FREWSXCV_GITHUB_ACCESS_TOKEN }}
-    - name: Setup Python
-      uses: actions/setup-python@v2
-    - name: Install pipenv
-      run: python -m pip install pipenv
-      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
-    - name: Installing project dependencies
-      run: pipenv install
-      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
-    - name: Generate site
-      run: pipenv run python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --hate-sites-csv-path ../hate-sites/hate-sites.csv
-      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
-        SINGLE_COMMIT: true
+      - uses: actions/checkout@v2
+        with:
+          repository: frewsxcv/hate-sites
+          token: ${{ secrets.FREWSXCV_GITHUB_ACCESS_TOKEN }}
+      - name: Upload hate-sites.csv
+        uses: actions/upload-artifact@v1
+        with:
+          name: hate-sites-csv
+          path: hate-sites.csv
+
+  build_site:
+    name: Build site
+    needs: fetch_hate_sites_csv
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Download hate-sites.csv
+        uses: actions/download-artifact@v1
+        with:
+          name: hate-sites.csv
+      - name: Setup Python
+        uses: actions/setup-python@v2
+      - name: Install pipenv
+        run: pip install pipenv
+      - name: Installing project dependencies
+        run: pipenv install
+      - name: Generate site
+        run: pipenv run python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --hate-sites-csv-path ../hate-sites/hate-sites.csv
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
+          SINGLE_COMMIT: true
