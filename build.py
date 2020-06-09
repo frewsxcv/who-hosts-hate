@@ -94,8 +94,6 @@ def asn_name(asn_id: int) -> typing.Optional[str]:
     response_json = requests.get(url).json()
     if not response_json['data']:
         return
-    # net_json = response_json['data'][0]
-    # return net_json['aka'] or net_json['name']
     return response_json['data'][0]['name']
 
 
