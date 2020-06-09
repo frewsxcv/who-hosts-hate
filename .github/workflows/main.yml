@@ -12,11 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        persist-credentials: false
-    - uses: actions/checkout@v2
-      with:
         repository: frewsxcv/hate-sites
         token: ${{ secrets.FREWSXCV_GITHUB_ACCESS_TOKEN }}
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
     - name: Setup Python
       uses: actions/setup-python@v2
     - name: Install pipenv
