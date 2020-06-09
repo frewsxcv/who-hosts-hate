@@ -10,6 +10,8 @@ Who hosts hate on the internet?
 
 ## Setup
 
+PIPENV
+
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate # or `source .venv/bin/activate.fish`

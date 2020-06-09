@@ -24,9 +24,12 @@ HATE_SITES_CSV_DEFAULT_PATH = 'hate-sites.csv'
 
 OUTPUT_DIR = 'build'
 
-ISP_NAME_MAP = {
-    "New Dream Network, LLC": "New Dream Network, LLC (DreamHost)",
-    "Softlayer Technologies Inc.": "Softlayer Technologies Inc. (IBM)",
+
+ASN_NAME_MAP = {
+    15169: "Google",
+    26347: "DreamHost",
+    36647: "Oath (Yahoo)",
+    54113: "Fastly",
 }
 
 
@@ -59,7 +62,12 @@ def site_rank(site: str) -> typing.Optional[int]:
     return int(rank) if rank else None
 
 
-def site_isp(site: str) -> str:
+class Asn(typing.NamedTuple):
+    name: str
+    number: int
+
+
+def site_isp(site: str) -> Asn:
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
@@ -71,20 +79,24 @@ def site_isp(site: str) -> str:
         except geoip2.errors.AddressNotFoundError:
             logging.error('{} – Could not find address in GeoLite2 DB'.format(site))
             return '<unknown>'
-    isp = asn_name(response.autonomous_system_number)
-    # isp = ISP_NAME_MAP.get(
-    #     response.autonomous_system_organization,
-    #     response.autonomous_system_organization,
-    # )
+    isp = (
+        ASN_NAME_MAP.get(response.autonomous_system_number) or
+        asn_name(response.autonomous_system_number) or
+        response.autonomous_system_organization
+    )
     logging.info('{} – Found ISP: {}'.format(site, isp))
-    return isp
+    return Asn(name=isp, number=response.autonomous_system_number)
 
 
-def asn_name(asn_id: int) -> str:
+def asn_name(asn_id: int) -> typing.Optional[str]:
+    # https://www.peeringdb.com/apidocs/#operation/retrieve%20net
     url = 'https://peeringdb.com/api/net?asn={}'.format(asn_id)
     response_json = requests.get(url).json()
-    aka = response_json['data'][0]['aka']
-    return aka if aka else response_json['data'][0]['name']
+    if not response_json['data']:
+        return
+    # net_json = response_json['data'][0]
+    # return net_json['aka'] or net_json['name']
+    return response_json['data'][0]['name']
 
 
 def sites() -> [[str, str]]:
