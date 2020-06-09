@@ -76,18 +76,18 @@ class Asn(typing.NamedTuple):
     number: int
 
 
-def site_isp(site: str) -> Asn:
+def site_isp(site: str) -> typing.Optional[Asn]:
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
         log_error(site, "Could not DNS resolve")
-        return '<unknown>'
+        return
     with geoip2.database.Reader('GeoLite2-ASN.mmdb') as reader:
         try:
             response = reader.asn(ip)
         except geoip2.errors.AddressNotFoundError:
             log_error(site, "Could not find address in GeoLite2 DB")
-            return '<unknown>'
+            return
     isp = (
         ASN_NAME_MAP.get(response.autonomous_system_number) or
         asn_name(response.autonomous_system_number) or
@@ -118,6 +118,9 @@ def build_isps_data():
 
     for site, hate_reason in sites():
         isp = site_isp(site)
+        if isp is None:
+            continue
+
         rank = site_rank(site)
 
         if hate_reason != 'splc':
