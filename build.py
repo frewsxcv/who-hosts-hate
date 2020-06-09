@@ -64,18 +64,10 @@ def site_rank(site: str) -> typing.Optional[int]:
 
 
 def log_info(site: str, s: str):
-    if not args.log_raw_site:
-        m = hashlib.sha256()
-        m.update(site.encode())
-        site = m.hexdigest()
     logging.info("{} - {}".format(site, s))
 
 
 def log_error(site: str, s: str):
-    if not args.log_raw_site:
-        m = hashlib.sha256()
-        m.update(site.encode())
-        site = m.hexdigest()
     logging.error("{} - {}".format(site, s))
 
 
@@ -186,9 +178,12 @@ if __name__ == "__main__":
     parser.add_argument('aws_access_key_id')
     parser.add_argument('aws_secret_access_key')
     parser.add_argument('--hate-sites-csv-path', default=HATE_SITES_CSV_DEFAULT_PATH)
-    parser.add_argument('--log-raw-site', action='store_true')
+    parser.add_argument('--log', action='store_true')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
+
+    if not args.log:
+        logging.disable(logging.CRITICAL)
 
     render()
