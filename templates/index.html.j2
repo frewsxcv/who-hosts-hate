@@ -12,8 +12,7 @@
 <ol>
   {% for asn, sites in isps_data %}
   <li>
-    <h2>{{ asn.name }}</h2>
-    <h3><a href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></h3>
+    <h2>{{ asn.name }} <sup><a class="dark-grey" href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></sup></h2>
     <ul>
       {% for site in sites %}
       <li class="monospace" style="color: {{ site[1] }}">
