@@ -71,12 +71,20 @@ def site_isp(site: str) -> str:
         except geoip2.errors.AddressNotFoundError:
             logging.error('{} – Could not find address in GeoLite2 DB'.format(site))
             return '<unknown>'
-    isp = ISP_NAME_MAP.get(
-        response.autonomous_system_organization,
-        response.autonomous_system_organization,
-    )
+    isp = asn_name(response.autonomous_system_number)
+    # isp = ISP_NAME_MAP.get(
+    #     response.autonomous_system_organization,
+    #     response.autonomous_system_organization,
+    # )
     logging.info('{} – Found ISP: {}'.format(site, isp))
     return isp
+
+
+def asn_name(asn_id: int) -> str:
+    url = 'https://peeringdb.com/api/net?asn={}'.format(asn_id)
+    response_json = requests.get(url).json()
+    aka = response_json['data'][0]['aka']
+    return aka if aka else response_json['data'][0]['name']
 
 
 def sites() -> [[str, str]]:
