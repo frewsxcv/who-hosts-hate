@@ -9,6 +9,7 @@ import logging
 import os
 import pprint
 import typing
+import hashlib
 import socket
 import requests
 import geoip2.database
@@ -40,26 +41,42 @@ def site_rank(site: str) -> typing.Optional[int]:
             urlinfo = obj.urlinfo(site)
             break
         except requests.exceptions.ConnectionError:
-            logging.error("AWIS connection error, trying again")
+            log_error(site, "AWIS connection error, trying again")
     try:
         tree = ElementTree.fromstring(str(urlinfo))
     except ElementTree.ParseError:
-        logging.error("Could not retrieve rank for {}".format(site))
+        log_error(site, "Could not retrieve rank")
         return None
     results = tree.findall(
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
     )
     if not results:
-        logging.error('Could not find rank')
+        log_error(site, 'Could not find rank')
         return None
     rank = tree.findall(
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
     )[0].text
-    logging.info('{} – Found site rank: {}'.format(site, rank))
+    log_info(site, "Found site rank: {}".format(rank))
     # TODO fetch `aws:ContributingSubdomain`
     return int(rank) if rank else None
+
+
+def log_info(site: str, s: str):
+    if not args.log_raw_site:
+        m = hashlib.sha256()
+        m.update(site.encode())
+        site = m.hexdigest()
+    logging.info("{} - {}".format(site, s))
+
+
+def log_error(site: str, s: str):
+    if not args.log_raw_site:
+        m = hashlib.sha256()
+        m.update(site.encode())
+        site = m.hexdigest()
+    logging.error("{} - {}".format(site, s))
 
 
 class Asn(typing.NamedTuple):
@@ -71,20 +88,20 @@ def site_isp(site: str) -> Asn:
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
-        logging.error("Could not DNS resolve {}".format(site))
+        log_error(site, "Could not DNS resolve")
         return '<unknown>'
     with geoip2.database.Reader('GeoLite2-ASN.mmdb') as reader:
         try:
             response = reader.asn(ip)
         except geoip2.errors.AddressNotFoundError:
-            logging.error('{} – Could not find address in GeoLite2 DB'.format(site))
+            log_error(site, "Could not find address in GeoLite2 DB")
             return '<unknown>'
     isp = (
         ASN_NAME_MAP.get(response.autonomous_system_number) or
         asn_name(response.autonomous_system_number) or
         response.autonomous_system_organization
     )
-    logging.info('{} – Found ISP: {}'.format(site, isp))
+    log_info(site, "Found ISP: {}".format(isp))
     return Asn(name=isp, number=response.autonomous_system_number)
 
 
@@ -169,6 +186,7 @@ if __name__ == "__main__":
     parser.add_argument('aws_access_key_id')
     parser.add_argument('aws_secret_access_key')
     parser.add_argument('--hate-sites-csv-path', default=HATE_SITES_CSV_DEFAULT_PATH)
+    parser.add_argument('--log-raw-site', action='store_true')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
