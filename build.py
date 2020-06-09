@@ -58,17 +58,17 @@ def site_rank(site: str) -> typing.Optional[int]:
         './/aws:TrafficData/aws:Rank',
         {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
     )[0].text
-    log_info(site, "Found site rank: {}".format(rank))
+    log_info(site, f"Found site rank: {rank}")
     # TODO fetch `aws:ContributingSubdomain`
     return int(rank) if rank else None
 
 
 def log_info(site: str, s: str):
-    logging.info("{} - {}".format(site, s))
+    logging.info(f"{site} - {s}")
 
 
 def log_error(site: str, s: str):
-    logging.error("{} - {}".format(site, s))
+    logging.error(f"{site} - {s}")
 
 
 class Asn(typing.NamedTuple):
@@ -93,13 +93,13 @@ def site_isp(site: str) -> Asn:
         asn_name(response.autonomous_system_number) or
         response.autonomous_system_organization
     )
-    log_info(site, "Found ISP: {}".format(isp))
+    log_info(site, f"Found ISP: {isp}")
     return Asn(name=isp, number=response.autonomous_system_number)
 
 
 def asn_name(asn_id: int) -> typing.Optional[str]:
     # https://www.peeringdb.com/apidocs/#operation/retrieve%20net
-    url = 'https://peeringdb.com/api/net?asn={}'.format(asn_id)
+    url = f"https://peeringdb.com/api/net?asn={asn_id}"
     response_json = requests.get(url).json()
     if not response_json['data']:
         return
@@ -131,7 +131,8 @@ def build_isps_data():
 def mask_site(site: str) -> str:
     domain = site.split(".")[-1]
     num_asterisks = len(site) - len(domain) - 2
-    return "{}{}.{}".format(site[0], "*" * num_asterisks, domain)
+    asterisks = "*" * num_asterisks
+    return f"{site[0]}{asterisks}.{domain}"
 
 
 def rank_to_color(rank: typing.Optional[int]) -> str:
