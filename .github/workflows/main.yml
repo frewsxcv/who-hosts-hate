@@ -21,12 +21,16 @@ jobs:
       uses: actions/setup-python@v2
     - name: Install pipenv
       run: pip install pipenv
+      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
     - name: Installing project dependencies
       run: pipenv install
+      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
     - name: Generate site
       run: pipenv run python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --hate-sites-csv-path ../hate-sites/hate-sites.csv
+      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@releases/v3
+      working-directory: $GITHUB_WORKSPACE/who-hosts-hate
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
