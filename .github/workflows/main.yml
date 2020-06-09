@@ -31,7 +31,7 @@ jobs:
       - name: Download hate-sites.csv
         uses: actions/download-artifact@v1
         with:
-          name: hate-sites.csv
+          name: hate-sites-csv
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install pipenv
