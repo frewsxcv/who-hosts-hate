@@ -14,11 +14,11 @@
   <li>
     <h2>{{ asn.name }} <sup><a class="dark-grey" href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></sup></h2>
     <ul>
-      {% for site in sites %}
-      <li class="monospace" style="color: {{ site[1] }}">
-        {{ site[0] }}
-        {% if site[2] %}
-          <a href="faqs.html#classify" class="dark-grey">[{{ site[2] }}]</a>
+      {% for site_name, site_color, site_classification in sites %}
+      <li class="monospace" style="color: {{ site_color }}">
+        {{ site_name }}
+        {% if site_classification %}
+          <a href="faqs.html#classify" class="dark-grey">[{{ site_classification }}]</a>
         {% endif %}
       </li>
       {% endfor %}
