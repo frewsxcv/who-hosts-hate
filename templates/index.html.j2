@@ -13,12 +13,17 @@
   {% for asn, sites in isps_data %}
   <li>
     <h2>{{ asn.name }} <sup><a class="dark-grey" href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></sup></h2>
-    <ul>
-      {% for site_name, site_color, site_classification in sites %}
-      <li class="monospace" style="color: {{ site_color }}">
+    <ul style="list-style-type: none; padding: 0;">
+      {% for site_name, site_rank_group, site_rank_color, site_classification in sites %}
+      <li class="monospace" style="border: 1px dotted grey; padding: 1em;">
         {{ site_name }}
+        <div style="color: {{ site_rank_color }}">
+        Rank: {{ site_rank_group }}
+        </div>
         {% if site_classification %}
-          <a href="faqs.html#classify" class="dark-grey">[{{ site_classification }}]</a>
+          <div>
+            <a href="faqs.html#classify" class="dark-grey">[{{ site_classification }}]</a>
+          </div>
         {% endif %}
       </li>
       {% endfor %}
