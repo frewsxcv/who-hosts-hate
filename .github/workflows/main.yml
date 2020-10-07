@@ -3,7 +3,9 @@ name: Build site
 on:
   push:
     branches:
-      - master
+      - master 
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   fetch_hate_sites_csv:
