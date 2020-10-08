@@ -78,7 +78,7 @@ class Asn(typing.NamedTuple):
 
 
 def site_isp(site: str) -> typing.Optional[Asn]:
-    log_info(site, f"Domain registrar: {whois.query(site).registrar}")
+    # log_info(site, f"Domain registrar: {whois.query(site).registrar}")
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
