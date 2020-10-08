@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install whois
-        run: apt-get install whois
+        run: sudo apt-get install whois
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
