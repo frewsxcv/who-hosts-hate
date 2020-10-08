@@ -27,6 +27,8 @@ jobs:
     needs: fetch_hate_sites_csv
     runs-on: ubuntu-latest
     steps:
+      - name: Install whois
+        run: apt-get install whois
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
