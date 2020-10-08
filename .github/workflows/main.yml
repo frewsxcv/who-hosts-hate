@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Install whois
         run: sudo apt-get install whois
+      - run: whois rwell.org
+      - run: whois alexlinder.com
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
