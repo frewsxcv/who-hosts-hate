@@ -118,7 +118,7 @@ def sites() -> [[str, str, str]]:
 def build_isps_data():
     isps = collections.defaultdict(lambda: [])
 
-    for site, classification, _ in sites():
+    for site, classification, _, _ in sites():
         isp = site_isp(site)
         if isp is None:
             continue
