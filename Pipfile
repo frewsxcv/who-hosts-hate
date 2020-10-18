@@ -3,12 +3,11 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-
 [packages]
 jinja2 = "*"
 myawis = "*"
 geoip2 = "*"
+whois = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

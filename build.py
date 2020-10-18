@@ -14,6 +14,7 @@ import socket
 import requests
 import geoip2.database
 import urllib.request
+import whois
 
 from xml.etree import ElementTree
 
@@ -77,6 +78,7 @@ class Asn(typing.NamedTuple):
 
 
 def site_isp(site: str) -> typing.Optional[Asn]:
+    # log_info(site, f"Domain registrar: {whois.query(site).registrar}")
     try:
         ip = socket.gethostbyname(site)
     except socket.gaierror:
@@ -106,7 +108,7 @@ def asn_name(asn_id: int) -> typing.Optional[str]:
     return response_json['data'][0]['name']
 
 
-def sites() -> [[str, str]]:
+def sites() -> [[str, str, str]]:
     with open(args.hate_sites_csv_path) as f:
         reader = csv.reader(f)
         next(reader) # Skip the heading row
@@ -116,17 +118,17 @@ def sites() -> [[str, str]]:
 def build_isps_data():
     isps = collections.defaultdict(lambda: [])
 
-    for site, hate_reason, _ in sites():
+    for site, classification, _, _ in sites():
         isp = site_isp(site)
         if isp is None:
             continue
 
         rank = site_rank(site)
 
-        if hate_reason != 'splc':
-            hate_reason = None
+        if classification != 'splc':
+            classification = None
 
-        isps[isp].append([mask_site(site), rank_to_rank_group(rank), rank_to_color(rank), hate_reason])
+        isps[isp].append([mask_site(site), rank_to_rank_group(rank), rank_to_color(rank), classification])
 
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 

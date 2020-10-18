@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   fetch_hate_sites_csv:
@@ -25,6 +27,8 @@ jobs:
     needs: fetch_hate_sites_csv
     runs-on: ubuntu-latest
     steps:
+      - name: Install whois
+        run: sudo apt-get install whois
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
@@ -34,6 +38,8 @@ jobs:
           name: hate-sites
       - name: Setup Python
         uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
       - name: Install pipenv
         run: pip install pipenv
       - name: Installing project dependencies
