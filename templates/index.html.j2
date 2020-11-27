@@ -1,29 +1,18 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-<div style="text-align: center">
-  <h1>Who hosts<a href="faqs.html#host"><sup>*</sup></a> hate<br>on the internet?</h1>
-
-  <p class="intro monospace"><a href="https://github.com/frewsxcv/who-hosts-hate/">source</a> ∙ <a href="faqs.html">faqs</a></p>
-</div>
-
-<hr style="margin-top: 2rem;">
-
-<ol>
+  <div class="pure-g">
   {% for asn, sites in isps_data %}
-  <li>
-    <h2>{{ asn.name }} <sup><a class="dark-grey" href="https://www.peeringdb.com/asn/{{ asn.number }}">ASN</a></sup></h2>
-    <ul>
-      {% for site_name, site_color, site_classification in sites %}
-      <li class="monospace" style="color: {{ site_color }}">
-        {{ site_name }}
-        {% if site_classification %}
-          <a href="faqs.html#classify" class="dark-grey">[{{ site_classification }}]</a>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-  </li>
+    {% for site_name, site_color, site_classification in sites %}
+      <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4 pure-u-lg-1-5">
+        <div class="bg-less-dark p-1 m-tl-1">
+          <div class="truncate">site: {{ site_name }}</div>
+          <div class="truncate">status: UP</div>{# fime #}
+          <div class="truncate">host: {{ asn.name }}</div>{# fixme asn number #}
+          <div class="truncate">type: <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a></div>
+        </div>
+      </div>
+    {% endfor %}
   {% endfor %}
-</ol>
+  </div>
 {% endblock %}
