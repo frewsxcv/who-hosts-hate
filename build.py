@@ -137,7 +137,7 @@ def build_isps_data():
 def mask_site(site: str) -> str:
     domain = site.split(".")[-1]
     num_asterisks = len(site) - len(domain) - 2
-    asterisks = "*" * num_asterisks
+    asterisks = "•" * num_asterisks
     return f"{site[0]}{asterisks}.{domain}"
 
 
