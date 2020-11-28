@@ -1,18 +1,21 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-  <div class="pure-g">
   {% for asn, sites in isps_data %}
+    <div class="pure-u-1">
+      <h2 class="truncate">{{ asn.name }}</h2>{# fixme asn number #}
+    </div>
+
+    <div class="pure-g">
     {% for site_name, site_color, site_classification in sites %}
       <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4 pure-u-lg-1-5">
-        <div class="bg-less-dark p-1 m-tl-1">
+        <div class="bg-less-dark p-1 m-br-1">
           <div class="truncate">site: {{ site_name }}</div>
           <div class="truncate">status: UP</div>{# fime #}
-          <div class="truncate">host: {{ asn.name }}</div>{# fixme asn number #}
           <div class="truncate">type: <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a></div>
         </div>
       </div>
     {% endfor %}
+    </div>
   {% endfor %}
-  </div>
 {% endblock %}
