@@ -5,7 +5,6 @@ verify_ssl = true
 
 [packages]
 jinja2 = "*"
-myawis = "*"
 geoip2 = "*"
 whois = "*"
 

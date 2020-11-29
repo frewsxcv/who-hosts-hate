@@ -15,12 +15,8 @@ import requests
 import geoip2.database
 import urllib.request
 import whois
-import check
-
-from xml.etree import ElementTree
 
 import jinja2
-import myawis
 
 
 HATE_SITES_CSV_DEFAULT_PATH = 'hate-sites.csv'
@@ -34,35 +30,6 @@ ASN_NAME_MAP = {
     36647: "Oath (Yahoo)",
     54113: "Fastly",
 }
-
-
-def site_rank(site: str) -> typing.Optional[int]:
-    while True:
-        obj = myawis.CallAwis(args.aws_access_key_id, args.aws_secret_access_key)
-        try:
-            urlinfo = obj.urlinfo(site)
-            break
-        except requests.exceptions.ConnectionError:
-            log_error(site, "AWIS connection error, trying again")
-    try:
-        tree = ElementTree.fromstring(str(urlinfo))
-    except ElementTree.ParseError:
-        log_error(site, "Could not retrieve rank")
-        return None
-    results = tree.findall(
-        './/aws:TrafficData/aws:Rank',
-        {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
-    )
-    if not results:
-        log_error(site, 'Could not find rank')
-        return None
-    rank = tree.findall(
-        './/aws:TrafficData/aws:Rank',
-        {'aws': "http://awis.amazonaws.com/doc/2005-07-11"}
-    )[0].text
-    log_info(site, f"Found site rank: {rank}")
-    # TODO fetch `aws:ContributingSubdomain`
-    return int(rank) if rank else None
 
 
 def log_info(site: str, s: str):
@@ -127,14 +94,11 @@ def build_isps_data(limit=None):
         if isp is None:
             continue
 
-        rank = site_rank(site)
-
         hate_site_response = HateSiteLoader(domain=site).load()
         is_site_up = isinstance(
             HateSiteResponseAnalyzer(response=hate_site_response, page_string=page_string).analyze(),
             HateSiteResponseSiteUp
         )
-        print(f"site up: {is_site_up}")
 
         if classification != 'splc':
             classification = None
@@ -192,7 +156,7 @@ class HateSiteResponsePageStringNotFound:
     pass
 
 
-class HateSiteReponseSiteDown(typing.NamedTuple):
+class HateSiteResponseSiteDown(typing.NamedTuple):
     status_code: typing.Optional[int]
     reason: str
 
@@ -201,7 +165,7 @@ class HateSiteResponseAnalyzer(typing.NamedTuple):
     response: typing.Union[HateSiteResponse, HateSiteErrorResponse]
     page_string: str
 
-    def analyze(self) -> typing.Union[HateSiteResponseSiteUp, HateSiteResponsePageStringNotFound, HateSiteReponseSiteDown]:
+    def analyze(self) -> typing.Union[HateSiteResponseSiteUp, HateSiteResponsePageStringNotFound, HateSiteResponseSiteDown]:
         if isinstance(self.response, HateSiteResponse):
             if self.page_string.encode() in self.response.body:
                 return HateSiteResponseSiteUp()
@@ -237,8 +201,6 @@ def render(limit=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('aws_access_key_id')
-    parser.add_argument('aws_secret_access_key')
     parser.add_argument('--hate-sites-csv-path', default=HATE_SITES_CSV_DEFAULT_PATH)
     parser.add_argument('--log', action='store_true')
     parser.add_argument('--limit', type=int, help='Limit the number of sites to process')
