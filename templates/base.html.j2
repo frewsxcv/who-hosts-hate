@@ -32,15 +32,41 @@
       }
 
       /* variables */
+      /* https://paletton.com/#uid=73Y1U0kcEbc8EmTaIhAiWa8o57L */
       :root {
-        --dark: #1e202f;
-        --less-dark: #292a3e;
+        --color-primary-0: #292A3E;
+        --color-primary-1: #61637F;
+        --color-primary-2: #454761;
+        --color-primary-3: #1C1D38;
+        --color-primary-4: #0F112B;
+
+        --color-secondary-1-0: #594036;
+        --color-secondary-1-1: #B69285;
+        --color-secondary-1-2: #8C6A5D;
+        --color-secondary-1-3: #512E21;
+        --color-secondary-1-4: #3E1C0F;
+
+        --color-secondary-2-0: #253E33;
+        --color-secondary-2-1: #5C7E6F;
+        --color-secondary-2-2: #406152;
+        --color-secondary-2-3: #173829;
+        --color-secondary-2-4: #0B2B1C;
+
+        --color-complement-0: #595036;
+        --color-complement-1: #B6AA85;
+        --color-complement-2: #8C805D;
+        --color-complement-3: #514421;
+        --color-complement-4: #3E320F;
       }
 
       /* margin */
 
       .m-0 {
         margin: 0;
+      }
+
+      .m-t-0 {
+        margin-top: 0;
       }
 
       .m-l-1 {
@@ -64,6 +90,10 @@
 
       /* padding */
 
+      a {
+        color: var(--color-complement-1);
+      }
+
       .p-1 {
         padding: 1rem;
       }
@@ -75,11 +105,11 @@
       /* background colors */
 
       .bg-dark {
-        background-color: var(--dark);
+        background-color: var(--color-primary-4);
       }
 
       .bg-less-dark {
-        background-color: var(--less-dark);
+        background-color: var(--color-primary-0);
       }
 
       .bg-grey {

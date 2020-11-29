@@ -10,8 +10,8 @@
     {% for site_name, site_color, site_classification in sites %}
       <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4 pure-u-lg-1-5">
         <div class="bg-less-dark p-1 m-br-1">
-          <div class="truncate">site: {{ site_name }}</div>
-          <div class="truncate">status: UP</div>{# fime #}
+          <h3 class="truncate m-t-0">{{ site_name }}</h3>
+          {# <div class="truncate">status: UP</div> #}{# fime #}
           <div class="truncate">type: <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a></div>
         </div>
       </div>
