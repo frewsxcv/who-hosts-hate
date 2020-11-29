@@ -3,21 +3,31 @@
 {% block content %}
   {% for asn, sites in isps_data %}
     <div class="pure-u-1">
-      <h2 class="truncate">{{ asn.name }}</h2>{# fixme asn number #}
+      <h2 class="truncate m-y-0-3">{{ asn.name }}</h2>
+      {# <div><a href="{{ asn.number }}">asn</a></div> #}
     </div>
 
     <div class="pure-g">
-    {% for site_name, site_color, site_classification in sites %}
+    {% for site_name, is_site_up, site_classification in sites %}
       <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4 pure-u-lg-1-5">
         <div class="bg-less-dark p-1 m-br-1">
           <h3 class="truncate m-t-0">{{ site_name }}</h3>
-          {# <div class="truncate">status: UP</div> #}{# fime #}
+
+          <div class="truncate">
+            site status:
+            {% if is_site_up %}
+            <span class="site-up">up</span>
+            {% else %}
+            <span class="not-available">n/a</span>
+            {% endif %}
+          </div>{# fime #}
+
           <div class="truncate">
             type:
             {% if site_classification %}
             <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a>
             {% else %}
-            N/A
+            <span class="not-available">n/a</span>
             {% endif %}
           </div>
         </div>

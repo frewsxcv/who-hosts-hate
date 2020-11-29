@@ -15,6 +15,7 @@ import requests
 import geoip2.database
 import urllib.request
 import whois
+import check
 
 from xml.etree import ElementTree
 
@@ -121,17 +122,24 @@ def sites(limit=None) -> [[str, str, str]]:
 def build_isps_data(limit=None):
     isps = collections.defaultdict(lambda: [])
 
-    for site, classification, _, _ in sites(limit=limit):
+    for site, classification, _, page_string in sites(limit=limit):
         isp = site_isp(site)
         if isp is None:
             continue
 
         rank = site_rank(site)
 
+        hate_site_response = HateSiteLoader(domain=site).load()
+        is_site_up = isinstance(
+            HateSiteResponseAnalyzer(response=hate_site_response, page_string=page_string).analyze(),
+            HateSiteResponseSiteUp
+        )
+        print(f"site up: {is_site_up}")
+
         if classification != 'splc':
             classification = None
 
-        isps[isp].append([mask_site(site), rank_to_color(rank), classification])
+        isps[isp].append([mask_site(site), is_site_up, classification])
 
     return sorted(isps.items(), key=lambda x: len(x[1]), reverse=True)
 
@@ -143,21 +151,66 @@ def mask_site(site: str) -> str:
     return f"{site[0]}{asterisks}.{domain}"
 
 
-def rank_to_color(rank: typing.Optional[int]) -> str:
-    if rank and rank < 10_000:
-        return '#fff600'
-    elif rank and rank < 100_000:
-        return '#d7d45d'
-    elif rank and rank < 1_000_000:
-        return '#c9c77f'
-    elif rank and rank < 10_000_000:
-        return '#bcbc9d'
-    else:
-        return '#b3b3b3'
-
-
 def todays_date() -> str:
     return datetime.datetime.now().strftime("%B %d, %Y")
+
+
+CHROME_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'
+REQUEST_HEADERS = {'User-Agent': CHROME_USER_AGENT}
+
+
+class HateSiteErrorResponse(typing.NamedTuple):
+    reason: str
+    status_code: typing.Optional[int]
+
+
+class HateSiteResponse(typing.NamedTuple):
+    body: bytes
+    status_code: int
+
+
+class HateSiteLoader(typing.NamedTuple):
+    domain: str
+
+    def load(self) -> typing.Union[HateSiteResponse, HateSiteErrorResponse]:
+        url = 'http://' + self.domain
+        request = urllib.request.Request(url, headers=REQUEST_HEADERS)
+        try:
+            response = urllib.request.urlopen(request)
+        except urllib.error.HTTPError as error:
+            return HateSiteErrorResponse(reason=str(error.reason), status_code=error.code)
+        except urllib.error.URLError as error:
+            return HateSiteErrorResponse(reason=str(error.reason), status_code=None)
+        return HateSiteResponse(body=response.read(), status_code=response.status)
+
+
+class HateSiteResponseSiteUp:
+    pass
+
+
+class HateSiteResponsePageStringNotFound:
+    pass
+
+
+class HateSiteReponseSiteDown(typing.NamedTuple):
+    status_code: typing.Optional[int]
+    reason: str
+
+
+class HateSiteResponseAnalyzer(typing.NamedTuple):
+    response: typing.Union[HateSiteResponse, HateSiteErrorResponse]
+    page_string: str
+
+    def analyze(self) -> typing.Union[HateSiteResponseSiteUp, HateSiteResponsePageStringNotFound, HateSiteReponseSiteDown]:
+        if isinstance(self.response, HateSiteResponse):
+            if self.page_string.encode() in self.response.body:
+                return HateSiteResponseSiteUp()
+            else:
+                return HateSiteResponsePageStringNotFound()
+        elif self.response.status_code:
+            return HateSiteResponseSiteDown(status_code=self.response.status_code, reason=self.response.reason)
+        else:
+            return HateSiteResponseSiteDown(status_code=None, reason=self.response.reason)
 
 
 def render(limit=None):
