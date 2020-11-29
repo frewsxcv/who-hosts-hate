@@ -5,8 +5,6 @@ Who hosts hate on the internet?
 ## Requirements
 
 - Python 3.7
-- AWS account
-  - Used for querying a site’s popularity ranking
 
 ## Setup
 
