@@ -12,7 +12,14 @@
         <div class="bg-less-dark p-1 m-br-1">
           <h3 class="truncate m-t-0">{{ site_name }}</h3>
           {# <div class="truncate">status: UP</div> #}{# fime #}
-          <div class="truncate">type: <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a></div>
+          <div class="truncate">
+            type:
+            {% if site_classification %}
+            <a href="faqs.html#classify" class="dark-grey">{{ site_classification }}</a>
+            {% else %}
+            N/A
+            {% endif %}
+          </div>
         </div>
       </div>
     {% endfor %}
