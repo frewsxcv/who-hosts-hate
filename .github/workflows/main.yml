@@ -45,7 +45,7 @@ jobs:
       - name: Installing project dependencies
         run: pipenv install
       - name: Generate site
-        run: pipenv run python build.py ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --hate-sites-csv-path hate-sites/hate-sites.csv
+        run: pipenv run python build.py --hate-sites-csv-path hate-sites/hate-sites.csv
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
