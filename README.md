@@ -23,7 +23,7 @@ pip install -r requirements.txt
 Generate `index.html` via `build.py`.
 
 ```
-usage: build.py [-h] aws_access_key_id aws_secret_access_key
+usage: build.py [-h]
 ```
 
 ## Legal
