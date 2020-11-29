@@ -108,18 +108,20 @@ def asn_name(asn_id: int) -> typing.Optional[str]:
     return response_json['data'][0]['name']
 
 
-def sites() -> [[str, str, str]]:
+def sites(limit=None) -> [[str, str, str]]:
     with open(args.hate_sites_csv_path) as f:
         reader = csv.reader(f)
         next(reader) # Skip the heading row
-        # return list(reader)[:10]
-        return list(reader)
+        if limit:
+            return list(reader)[:limit]
+        else:
+            return list(reader)
 
 
-def build_isps_data():
+def build_isps_data(limit=None):
     isps = collections.defaultdict(lambda: [])
 
-    for site, classification, _, _ in sites():
+    for site, classification, _, _ in sites(limit=limit):
         isp = site_isp(site)
         if isp is None:
             continue
@@ -158,7 +160,7 @@ def todays_date() -> str:
     return datetime.datetime.now().strftime("%B %d, %Y")
 
 
-def render():
+def render(limit=None):
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader('templates'),
     )
@@ -170,7 +172,7 @@ def render():
 
     with open(os.path.join(OUTPUT_DIR, 'index.html'), 'w') as f:
         f.write(template.render(
-            isps_data=build_isps_data(),
+            isps_data=build_isps_data(limit=limit),
         ))
 
     template = env.get_template('faqs.html.j2')
@@ -186,6 +188,7 @@ if __name__ == "__main__":
     parser.add_argument('aws_secret_access_key')
     parser.add_argument('--hate-sites-csv-path', default=HATE_SITES_CSV_DEFAULT_PATH)
     parser.add_argument('--log', action='store_true')
+    parser.add_argument('--limit', type=int, help='Limit the number of sites to process')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -193,4 +196,4 @@ if __name__ == "__main__":
     if not args.log:
         logging.disable(logging.CRITICAL)
 
-    render()
+    render(limit=args.limit)
