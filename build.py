@@ -100,7 +100,7 @@ def build_isps_data(limit=None):
             HateSiteResponseSiteUp
         )
 
-        if classification != 'splc':
+        if classification != 'splc' and classification != 'islamophobia':
             classification = None
 
         isps[isp].append([mask_site(site), is_site_up, classification])
