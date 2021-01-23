@@ -145,7 +145,7 @@ class HateSiteLoader(typing.NamedTuple):
             return HateSiteErrorResponse(reason=str(error.reason), status_code=error.code)
         except urllib.error.URLError as error:
             return HateSiteErrorResponse(reason=str(error.reason), status_code=None)
-        except TimeoutError as error:
+        except (TimeoutError, socket.error):
             return HateSiteErrorResponse(reason="Timeout", status_code=None)
         except ConnectionResetError as error:
             return HateSiteErrorResponse(reason="Connection reset", status_code=None)
