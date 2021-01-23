@@ -140,7 +140,7 @@ class HateSiteLoader(typing.NamedTuple):
         url = 'http://' + self.domain
         request = urllib.request.Request(url, headers=REQUEST_HEADERS)
         try:
-            response = urllib.request.urlopen(request)
+            response = urllib.request.urlopen(request, timeout=10)
         except urllib.error.HTTPError as error:
             return HateSiteErrorResponse(reason=str(error.reason), status_code=error.code)
         except urllib.error.URLError as error:
