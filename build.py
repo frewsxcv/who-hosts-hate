@@ -4,19 +4,18 @@ import argparse
 import collections
 import csv
 import datetime
+import geoip2.database
+import hashlib
+import jinja2
 import json
 import logging
 import os
 import pprint
-import typing
-import hashlib
-import socket
 import requests
-import geoip2.database
+import socket
+import typing
 import urllib.request
 import whois
-
-import jinja2
 
 
 HATE_SITES_CSV_DEFAULT_PATH = 'hate-sites.csv'
